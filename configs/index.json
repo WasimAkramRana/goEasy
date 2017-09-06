@@ -1,0 +1,16 @@
+{
+  "appName"    : "GoEasy",
+  "appPort"    : 3002,
+  "logsPath"   : "/goEasy/goEasy.log",
+  "dbURI"      : "mongodb://localhost/devDB",
+  "secretKey"  : "superSecret",
+  "AuthKey"    : "MSG91",
+  "emailConfig"         : {
+    "smtpServer"        : "smtp.gmail.com",
+    "smtpPort"          : "465",
+    "username"          : "jaiwas009@gmail.com",
+    "password"          : "@123jaiwas1"
+  },
+  "defaultValues" : {
+  }
+}

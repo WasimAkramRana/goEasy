@@ -1,0 +1,33 @@
+{
+  "name": "goeasy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rao Wasim Akram Rana",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.5.0",
+    "body-parser": "^1.17.2",
+    "bunyan": "^1.8.12",
+    "bunyan-middleware": "^0.8.0",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "crypto": "^1.0.1",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^7.4.3",
+    "mongoose": "^4.11.10",
+    "node-fetch": "^1.7.2",
+    "nodemailer": "^4.1.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "randomstring": "^1.1.5",
+    "request": "^2.81.0",
+    "sendotp": "^1.2.7",
+    "textmagic-rest-client": "0.0.5",
+    "twilio": "^3.6.5",
+    "unirest": "^0.5.1"
+  }
+}
