@@ -81,8 +81,8 @@ module.exports.register = function(req, res) {
   var randomString = randomstring.generate();
   async.series([
     function(next) {
-      // User.findOne({ $or: [{email:req.body.email}, {username: req.body.userName}]}, {email:1, username:1}, function(err, response) {
-      //   if(!response) {
+      User.findOne({ $or: [{email:req.body.email}, {username: req.body.userName}]}, {email:1, username:1}, function(err, response) {
+        if(!response) {
           var user           = new User();
           user.email         = req.body.email;
           user.mobileNumber  = req.body.mobileNumber;
@@ -96,10 +96,10 @@ module.exports.register = function(req, res) {
               next();
             }
           });
-        // } else {
-        //   res.status(409).json({error: {message: 'Email or username already registerd with us'}});
-        // }
-      //});
+        } else {
+          res.status(409).json({error: {message: 'Email or username already registerd with us'}});
+        }
+      });
     },
     function(next) {
       sendSms(req.body.mobileNumber, req, res, next);
