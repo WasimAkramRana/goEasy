@@ -2,7 +2,6 @@ var express                   = require('express');
 var app                       = express();
 var apiRoutes                 = express.Router();
 require('./models/db')
-require('./controllers/passport');
 var bodyParser                = require('body-parser');
 var bunyan                    = require('bunyan');
 var cors                      = require('cors');
@@ -34,6 +33,9 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.get('/', function(req, res) {
+   res.status(200).json({sucess:{message:'app working'}});
+});
 app.use('/v1/users', require('./routes/users'));
 
 /**
@@ -47,9 +49,10 @@ app.use(function(req, res, next) {
       if(err) {
 				return res.status(406).json({error: {message:'unauthorized user'}});
 			} else {
-				req.decoded              = decoded;
-        req.currentUser.clientID = decoded._id;
-        req.currentUser.email    = decoded.email;
+				req.decoded                  = decoded;
+        req.currentUser.userID       = decoded._id;
+        req.currentUser.mobileNumber = decoded.mobileNumber;
+        req.currentUser.email        = decoded.email;
 				next();
 			}
 		});
@@ -60,11 +63,14 @@ app.use(function(req, res, next) {
 
 /**
 * This middleware is use for to define the error
-**/
+*/
 app.use(function(err, req, res, next) {
   console.error(err.stack);
    res.status(409).json({error: 'Something wrong with request'});
 });
 
+// app.listen(3002, "0.0.0.0", function() {
+//     console.log('Listening to port:  ' + 3002);
+// });
 app.listen(config.appPort);
 console.log("server are running on port: " + config.appPort);

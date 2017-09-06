@@ -1,10 +1,10 @@
 var passport          = require('passport');
 var mongoose          = require('mongoose');
-var User              = mongoose.model('users');
 var async             = require('async');
 var nodemailer        = require('nodemailer');
 var randomstring      = require('randomstring');
 var config            = require('../configs/index.json');
+var User              = require('../models/users');
 var crypto            = require('crypto');
 var jwt               = require('jsonwebtoken');
 var unirest           = require('unirest');
@@ -81,62 +81,58 @@ module.exports.register = function(req, res) {
   var randomString = randomstring.generate();
   async.series([
     function(next) {
-      User.findOne({ $or: [{email:req.body.email}, {username: req.body.userName}]}, {email:1, username:1}, function(err, response) {
-        if(!response) {
-          var user           = new User();
-          user.email         = req.body.email;
-          user.mobileNumber  = req.body.mobileNumber;
-          user.emailVerified = false;
-          user.setPassword(req.body.password);
-          user.emailVerificationToken = randomString;
-          user.save(function(err, data) {
-            if(err) {
-              res.status(500).json({error: {message:'Internal server error'}});
-            } else {
-              next();
-            }
-          });
-        } else {
-          res.status(409).json({error: {message: 'Email or username already registerd with us'}});
-        }
-      });
+      saveUserDetails(req, res, next);
     },
     function(next) {
-      sendSms(req.body.mobileNumber, req, res, next);
+      generateOTP(req.body.mobileNumber, req, res, next);
     }
-    // function(next) {
-    //   sendVerificationEmail(req.body.email, randomString, req, res, next);
-    // }
   ],
   function(err, results) {
-    if(err) {
-      res.json(err);
-    } else {
-      res.status(200).json({success: {message:'User Successfully registerd with us and email Successfully sent to the user email address'}});
-    }
+    res.status(200).json({success: {message:'User Successfully registerd with us and email Successfully sent to the user email address'}});
   });
 };
 
-function sendSms(number, req, res, next) {
-  let otp      = randomstring.generate({length: 4, charset: 'numeric'});
+function saveUserDetails(req, res, next) {
+  User.findOne({ $or: [{email:req.body.email}, {mobileNumber: req.body.mobileNumber}]}, {email:1, username:1}, function(err, response) {
+    if(!response) {
+      let salt     = crypto.randomBytes(16).toString('hex');
+      let password = crypto.pbkdf2Sync(req.body.password, salt, 1000, 64).toString('hex');
+      var user           = new User();
+      user.email         = req.body.email;
+      user.mobileNumber  = req.body.mobileNumber;
+      user.password      = password;
+      user.salt          = salt;
+      user.save(function(err, data) {
+        if(err) {
+          res.status(500).json({error: {message:'Internal server error'}});
+        } else {
+          next();
+        }
+      });
+    } else {
+      res.status(409).json({error: {message: 'Email or username already registerd with us'}});
+    }
+  });
+}
+
+function generateOTP(number, req, res, next) {
+  let OTP      = randomstring.generate({length: 4, charset: 'numeric'});
+  let message  = 'Your GoEasy verification code is: ' + OTP;
   let postData = {
     'user'     : '8800847728',
     'pass'     : '498b5ac',
     'sender'   : 'GOEASY',
     'phone'    : number,
-    'text'     : 'hello',
+    'text'     : message,
     'priority' : 'ndnd',
     'stype'    : 'normal'
   }
   unirest.post('http://bhashsms.com/api/sendmsg.php')
   .header('Accept', 'application/json')
-  .send()
-  .end(function (err, response) {
-    if(err) {
-
-    }
-    next();
+  .send(postData)
+  .end(function (response) {
     console.log(response.body);
+      next();
   });
 }
 

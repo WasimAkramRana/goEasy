@@ -4,12 +4,11 @@
   "logsPath"   : "/goEasy/goEasy.log",
   "dbURI"      : "mongodb://localhost/devDB",
   "secretKey"  : "superSecret",
-  "AuthKey"    : "MSG91",
   "emailConfig"         : {
     "smtpServer"        : "smtp.gmail.com",
     "smtpPort"          : "465",
     "username"          : "info@example.com",
-    "password"          : "xxxx"
+    "password"          : "xxxxxx"
   },
   "defaultValues" : {
   }
