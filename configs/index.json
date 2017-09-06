@@ -8,8 +8,8 @@
   "emailConfig"         : {
     "smtpServer"        : "smtp.gmail.com",
     "smtpPort"          : "465",
-    "username"          : "jaiwas009@gmail.com",
-    "password"          : "@123jaiwas1"
+    "username"          : "info@example.com",
+    "password"          : "xxxx"
   },
   "defaultValues" : {
   }
