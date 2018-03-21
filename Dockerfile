@@ -11,4 +11,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 3080
-CMD [ "node", "start" ]
+CMD [ "node", "server" ]
