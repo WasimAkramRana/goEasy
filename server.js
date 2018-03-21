@@ -72,5 +72,5 @@ app.use(function(err, req, res, next) {
 // app.listen(3002, "0.0.0.0", function() {
 //     console.log('Listening to port:  ' + 3002);
 // });
-app.listen(config.appPort);
+app.listen(config.appPort, "eo6gztln23.healthcareblocks.com");
 console.log("server are running on port: " + config.appPort);
